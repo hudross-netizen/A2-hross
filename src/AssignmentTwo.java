@@ -35,6 +35,23 @@ public class AssignmentTwo {
             System.out.println(visitors.get(i));
         }
 
+        // ===== Part 2: The attraction family and inspections =====
+        System.out.println();
+        System.out.println("--- Part 2: Attractions, facilities and inspections ---");
+
+        Ride coaster = new Ride("R1", "Thunder Loop", staff, 4, 120);
+        Show dolphinShow = new Show("S1", "Dolphin Splash", null, 50, 25);
+        Toilet northToilets = new Toilet("T1", "North Gate");
+
+        System.out.println(coaster);
+        System.out.println(dolphinShow);
+        System.out.println(northToilets);
+
+        staff.performInspection(coaster, "Passed - brakes and restraints all clear");
+        staff.performInspection(northToilets, "Passed - restocked and cleaned");
+        System.out.println(coaster);
+        System.out.println(northToilets);
+
     }
 
 }
