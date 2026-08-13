@@ -52,6 +52,27 @@ public class AssignmentTwo {
         System.out.println(coaster);
         System.out.println(northToilets);
 
+        // ===== Part 3: The waiting line =====
+        System.out.println();
+        System.out.println("--- Part 3: The waiting line (FIFO) ---");
+
+        Visitor v4 = new Visitor(204, "Dan Foster", 45, "Season Pass");
+        Visitor v5 = new Visitor(205, "Evan Larsen", 16);
+
+        coaster.addToQueue(v1);
+        coaster.addToQueue(v2);
+        coaster.addToQueue(v3);
+        coaster.addToQueue(v4);
+        coaster.addToQueue(v5);
+        coaster.printQueue();
+
+        System.out.println("Serving the next visitor:");
+        coaster.removeFromQueue();
+        coaster.printQueue();
+
+        System.out.println("Emptying the line for the dolphin show:");
+        dolphinShow.removeFromQueue();
+
     }
 
 }

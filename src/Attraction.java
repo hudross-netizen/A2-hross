@@ -1,3 +1,6 @@
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.Queue;
 /**
  * Abstract base class for every attraction in the park.
  * Holds what all attractions share: an ID, a name, the staff member
@@ -9,6 +12,7 @@ public abstract class Attraction {
     private String name;
     private Staff operator;
     private int maxPerCycle;
+    private Queue<Visitor> waitingLine = new LinkedList<Visitor>();
 
     /**
      * Creates an attraction with its shared details.
@@ -54,6 +58,58 @@ public abstract class Attraction {
      * @return the kind, e.g. "Ride"
      */
     public abstract String getKind();
+
+    /**
+     * Adds a visitor to the back of this attraction's waiting line.
+     * @param visitor the visitor joining the line
+     */
+    public void addToQueue(Visitor visitor) {
+        if (visitor == null) {
+            System.out.println("Warning: cannot add an unknown visitor to the line for " + name + ".");
+            return;
+        }
+        waitingLine.offer(visitor);
+        System.out.println(visitor.getName() + " joined the line for " + name + " (position " + waitingLine.size() + ").");
+    }
+
+    /**
+     * Serves the visitor who has waited longest, removing them from
+     * the front of the line.
+     * @return the visitor served, or null if nobody was waiting
+     */
+    public Visitor removeFromQueue() {
+        Visitor next = waitingLine.poll();
+        if (next == null) {
+            System.out.println("WARNING: nobody is waiting for " + name + ".");
+            return null;
+        }
+        System.out.println(next.getName() + " left the line for " + name + " and was served.");
+        return next;
+    }
+
+    /**
+     * @return the number of visitors currently waiting
+     */
+    public int getQueueLength() {
+        return waitingLine.size();
+    }
+
+    /**
+     * Prints everyone currently waiting, from the front of the line
+     * to the back, using an iterator to traverse the queue.
+     */
+    public void printQueue() {
+        System.out.println("Waiting line for " + name + " (" + waitingLine.size() + " waiting):");
+        if (waitingLine.isEmpty()) {
+            System.out.println(" (nobody is waiting)");
+            return;
+        }
+        Iterator<Visitor> iterator = waitingLine.iterator();
+        while (iterator.hasNext()) {
+            System.out.println(" " + iterator.next());
+        }
+    }
+
 
     /**
      * @return the attraction's shared details, including its kind
