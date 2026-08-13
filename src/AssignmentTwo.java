@@ -73,6 +73,30 @@ public class AssignmentTwo {
         System.out.println("Emptying the line for the dolphin show:");
         dolphinShow.removeFromQueue();
 
+        // ===== Part 4: Visit history =====
+        System.out.println();
+        System.out.println("--- Part 4: Visit history, membership and sorting ---");
+
+        coaster.recordVisit(v1);
+        coaster.recordVisit(v3);
+        coaster.recordVisit(v4);
+        coaster.recordVisit(v1);
+        coaster.recordVisit(v5);
+        coaster.printVisitHistory();
+
+        Visitor amyAgain = new Visitor(201, "Amy Wu", 34, "Season Pass");
+        System.out.println("Has visitor 201 been on Thunder Loop? " + coaster.hasVisited(amyAgain));
+        System.out.println("How many times? " + coaster.countVisits(amyAgain));
+
+        Visitor stranger = new Visitor(299, "Unknown Guest", 30);
+        System.out.println("Has visitor 299 been on Thunder Loop? " + coaster.hasVisited(stranger));
+
+        coaster.sortHistoryByAge();
+        coaster.printVisitHistory();
+
+        coaster.sortHistoryByTicketThenName();
+        coaster.printVisitHistory();
+
     }
 
 }

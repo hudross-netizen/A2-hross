@@ -1,6 +1,9 @@
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Queue;
+import java.util.Collections;
+
 /**
  * Abstract base class for every attraction in the park.
  * Holds what all attractions share: an ID, a name, the staff member
@@ -13,6 +16,7 @@ public abstract class Attraction {
     private Staff operator;
     private int maxPerCycle;
     private Queue<Visitor> waitingLine = new LinkedList<Visitor>();
+    private ArrayList<Visitor> visitHistory = new ArrayList<Visitor>();
 
     /**
      * Creates an attraction with its shared details.
@@ -108,6 +112,85 @@ public abstract class Attraction {
         while (iterator.hasNext()) {
             System.out.println(" " + iterator.next());
         }
+    }
+
+    /**
+     * Records that a visitor has been on this attraction. The same
+     * visitor may appear more than once - repeat visits are kept.
+     * @param visitor the visitor who has just been served
+     */
+    public void recordVisit(Visitor visitor) {
+        if (visitor == null) {
+            return;
+        }
+        visitHistory.add(visitor);
+    }
+
+    /**
+     * Checks whether a visitor has ever been on this attraction.
+     * The match is made by Visitor's equals, so any visitor object
+     * carrying the same ID counts as the same guest.
+     * @param visitor the visitor to look for
+     * @return true if they appear in the visit history
+     */
+    public boolean hasVisited(Visitor visitor) {
+        return visitHistory.contains(visitor);
+    }
+
+    /**
+     * Counts how many times one visitor has been on this attraction.
+     * @param visitor the visitor to count
+     * @return the number of recorded visits by that guest
+     */
+    public int countVisits(Visitor visitor) {
+        int count = 0;
+        Iterator<Visitor> iterator = visitHistory.iterator();
+        while (iterator.hasNext()) {
+            if (iterator.next().equals(visitor)) {
+                count++;
+            }
+        }
+        return count;
+    }
+
+    /**
+     * @return the total number of visits recorded, including repeats
+     */
+    public int getTotalVisits() {
+        return visitHistory.size();
+    }
+
+    /**
+     * Prints the visit history in its current order.
+     */
+    public void printVisitHistory() {
+        System.out.println("Visit history for " + name + " (" + visitHistory.size() + " visits):");
+        if (visitHistory.isEmpty()) {
+            System.out.println("  (no visits recorded)");
+            return;
+        }
+        Iterator<Visitor> iterator = visitHistory.iterator();
+        while (iterator.hasNext()) {
+            System.out.println("  " + iterator.next());
+        }
+    }
+
+    /**
+     * Sorts the visit history by the visitors' natural ordering: age,
+     * youngest first.
+     */
+    public void sortHistoryByAge() {
+        Collections.sort(visitHistory);
+        System.out.println("Visit history for " + name + " sorted by age (natural ordering).");
+    }
+
+    /**
+     * Sorts the visit history by ticket type and then name, using a
+     * comparator rather than the visitors' natural ordering.
+     */
+    public void sortHistoryByTicketThenName() {
+        visitHistory.sort(new VisitorTicketComparator());
+        System.out.println("Visit history for " + name + " sorted by ticket type, then name.");
     }
 
 
