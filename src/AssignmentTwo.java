@@ -97,6 +97,40 @@ public class AssignmentTwo {
         coaster.sortHistoryByTicketThenName();
         coaster.printVisitHistory();
 
+        // ===== Part 5: Running cycles =====
+        System.out.println();
+        System.out.println("--- Part 5: Running cycles ---");
+
+        System.out.println("Cycles so far - Thunder Loop: " + coaster.getCyclesRun()
+                + ", Dolphin Splash: " + dolphinShow.getCyclesRun());
+
+        System.out.println("Before the cycle:");
+        coaster.printQueue();
+        coaster.runCycle();
+        System.out.println("After the cycle:");
+        coaster.printQueue();
+        coaster.printVisitHistory();
+
+        System.out.println("Trying to run with an empty line:");
+        coaster.runCycle();
+
+        System.out.println("Trying to run while closed for inspection:");
+        coaster.addToQueue(v2);
+        coaster.startInspection();
+        coaster.runCycle();
+        coaster.completeInspection("Passed - routine mid-day check");
+
+        System.out.println("The show runs to an empty house:");
+        dolphinShow.setOperator(staff);
+        dolphinShow.runCycle();
+
+        System.out.println("An unstaffed show refuses to run:");
+        dolphinShow.setOperator(null);
+        dolphinShow.runCycle();
+
+        System.out.println("Cycles at the end of the day - Thunder Loop: " + coaster.getCyclesRun()
+                + ", Dolphin Splash: " + dolphinShow.getCyclesRun());
+
     }
 
 }

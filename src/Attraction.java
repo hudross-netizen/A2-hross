@@ -17,6 +17,7 @@ public abstract class Attraction {
     private int maxPerCycle;
     private Queue<Visitor> waitingLine = new LinkedList<Visitor>();
     private ArrayList<Visitor> visitHistory = new ArrayList<Visitor>();
+    private int cyclesRun = 0;
 
     /**
      * Creates an attraction with its shared details.
@@ -55,6 +56,39 @@ public abstract class Attraction {
 
     public int getMaxPerCycle() {
         return maxPerCycle;
+    }
+
+    /**
+     * @return how many cycles this attraction has run today
+     */
+    public int getCyclesRun() {
+        return cyclesRun;
+    }
+
+    /**
+     * Runs a single cycle if this attraction's own rules allow it.
+     * Each kind decides differently, so each subclass supplies its rule.
+     */
+    public abstract void runCycle();
+
+    /**
+     * The shared serving machinery every kind uses once it has decided
+     * to run: takes up to its capacity from the front of the waiting
+     * line, moves them into the visit history, and counts the cycle.
+     */
+    public void serveCycle() {
+        int served = 0;
+        while (served < maxPerCycle && waitingLine.size() > 0) {
+            Visitor next = waitingLine.poll();
+            visitHistory.add(next);
+            System.out.println("  " + next.getName() + " was taken from the line and served.");
+            served++;
+        }
+        cyclesRun++;
+        if (served == 0) {
+            System.out.println("  Nobody was waiting - the cycle ran to an empty house.");
+        }
+        System.out.println(name + " completed cycle " + cyclesRun + " (" + served + " visitors served).");
     }
 
     /**

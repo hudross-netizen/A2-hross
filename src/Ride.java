@@ -59,4 +59,26 @@ public class Ride extends Attraction implements Inspectable {
         return super.toString() + " | Min height: " + minHeightCm + "cm | Last inspection: "
                 + lastInspectionOutcome;
     }
+
+    /**
+     * Runs one dispatch. A ride refuses to run without an operator,
+     * while closed for inspection, or with nobody waiting.
+     */
+    @Override
+    public void runCycle() {
+        if (getOperator() == null) {
+            System.out.println("WARNING: " + getName() + " cannot run - no operator assigned.");
+            return;
+        }
+        if (closedForInspection) {
+            System.out.println("WARNING: " + getName() + " cannot run - closed for inspection.");
+            return;
+        }
+        if (getQueueLength() == 0) {
+            System.out.println("WARNING: " + getName() + " cannot run - nobody is waiting.");
+            return;
+        }
+        System.out.println(getName() + " is dispatching a cycle...");
+        serveCycle();
+    }
 }

@@ -35,4 +35,18 @@ public class Show extends Attraction {
     public String toString() {
         return super.toString() + " | Duration: " + durationMinutes + " minutes";
     }
+
+    /**
+     * Runs one performance. A show needs an operator, but goes ahead
+     * whether or not anyone is waiting - an empty house still counts.
+     */
+    @Override
+    public void runCycle() {
+        if (getOperator() == null) {
+            System.out.println("WARNING: " + getName() + " cannot run - no operator assigned.");
+            return;
+        }
+        System.out.println(getName() + " is starting a performance...");
+        serveCycle();
+    }
 }
