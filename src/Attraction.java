@@ -242,6 +242,31 @@ public abstract class Attraction {
         return new ArrayList<Visitor>(waitingLine);
     }
 
+    /**
+     * Restores a waiting visitor when loading from a backup, without
+     * the console message a live arrival would produce.
+     * @param visitor the visitor to place at the back of the line
+     */
+    public void restoreWaitingVisitor(Visitor visitor) {
+        waitingLine.offer(visitor);
+    }
+
+    /**
+     * Restores a served visitor when loading from a backup.
+     * @param visitor the visitor to append to the history
+     */
+    public void restoreVisit(Visitor visitor) {
+        visitHistory.add(visitor);
+    }
+
+    /**
+     * Restores the cycle count when loading from a backup.
+     * @param cycles the number of cycles already run
+     */
+    public void restoreCycles(int cycles) {
+        cyclesRun = cycles;
+    }
+
 
     /**
      * @return the attraction's shared details, including its kind

@@ -1,3 +1,4 @@
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -160,6 +161,57 @@ public class AssignmentTwo {
         park.printSeatsServed();
         System.out.println("Total seats served across the park: " + park.countTotalSeats());
         System.out.println("Distinct visitors admitted today: " + park.countDistinctVisitors());
+
+        // ===== Part 7: Backing up and restoring the park =====
+        System.out.println();
+        System.out.println("--- Part 7: Backing up and restoring ---");
+
+        File backup = new File("park-backup.txt");
+        try {
+            ParkIO.save(park, backup);
+            ThemePark restored = ParkIO.load(backup, "Sunshine Adventure Park (restored)");
+
+            System.out.println("Original attractions: " + park.getAttractionCount()
+                    + ", restored: " + restored.getAttractionCount());
+            System.out.println("Original seats: " + park.countTotalSeats()
+                    + ", restored: " + restored.countTotalSeats());
+            System.out.println("Original distinct visitors: " + park.countDistinctVisitors()
+                    + ", restored: " + restored.countDistinctVisitors());
+
+            Attraction restoredCoaster = restored.findAttraction("R1");
+            System.out.println("  " + restoredCoaster);
+            restoredCoaster.printQueue();
+        } catch (ParkStorageException e) {
+            System.out.println("Backup or restore failed: " + e.getMessage());
+        }
+
+        System.out.println("Trying to load a file that does not exist:");
+        try {
+            ParkIO.load(new File("no-such-park.txt"), "Recovered park");
+        } catch (ParkStorageException e) {
+            System.out.println("  Handled: " + e.getMessage());
+            System.out.println("  Carrying on with the park already in memory.");
+        }
+
+        System.out.println("Loading a corrupted file:");
+        try {
+            ArrayList<String> badLines = new ArrayList<String>();
+            badLines.add("STAFF,101,John Cena,20,Ride Operator");
+            badLines.add("VISITOR,201,Amy Wu,34,Season Pass");
+            badLines.add("VISITOR,202,Ben Okafor");
+            badLines.add("ATTRACTION,RIDE,R1,Thunder Loop,101,four,120,1");
+            badLines.add("ATTRACTION,SHOW,S1,Dolphin Splash,NONE,50,25,1");
+            badLines.add("ROLLERDISCO,X1,Unknown thing");
+            badLines.add("QUEUE,S1,201");
+            badLines.add("HISTORY,S1,999");
+            File corrupt = new File("park-corrupt.txt");
+            ParkIO.writeLines(corrupt, badLines);
+            ThemePark partial = ParkIO.load(corrupt, "Park from corrupt file");
+            System.out.println("  Attractions recovered despite the bad lines: "
+                    + partial.getAttractionCount());
+        } catch (ParkStorageException e) {
+            System.out.println("  Handled: " + e.getMessage());
+        }
 
     }
 

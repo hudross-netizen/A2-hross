@@ -42,5 +42,10 @@ public class Staff extends Person {
             return super.toString() + " | Position: " + position;
         }
 
+        /** @return the role this staff member holds */
+        public String getPosition() {
+        return position;
+    }
+
     
 }

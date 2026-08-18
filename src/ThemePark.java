@@ -126,4 +126,14 @@ public class ThemePark {
         }
         return total;
     }
+
+    /**
+     * Looks up an attraction without printing anything, for internal
+     * use where a missing entry is handled by the caller.
+     * @param id the identifier to look up
+     * @return the attraction, or null if not registered
+     */
+    public Attraction getAttraction(String id) {
+        return attractions.get(id);
+    }
 }
