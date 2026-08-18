@@ -1,6 +1,9 @@
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 /**
  * PROG2004 Assessment 2 - Theme park attraction and Visitor management system.
@@ -212,6 +215,61 @@ public class AssignmentTwo {
         } catch (ParkStorageException e) {
             System.out.println("  Handled: " + e.getMessage());
         }
+
+        // ===== Part 8: Running the park concurrently =====
+        System.out.println();
+        System.out.println("--- Part 8: Running attractions concurrently ---");
+
+        coaster.addToQueue(v1);
+        coaster.addToQueue(v3);
+        coaster.addToQueue(v4);
+        splashFalls.addToQueue(v5);
+        splashFalls.addToQueue(v6);
+        magicShow.addToQueue(v2);
+
+        System.out.println("Park-wide total before running: " + park.getParkWideTotal());
+
+        System.out.println("Round 1 - a thread for each attraction:");
+        Thread coasterThread = new Thread(new AttractionRunner(coaster, park, 2), "coaster-thread");
+        Thread splashThread = new Thread(new AttractionRunner(splashFalls, park, 2), "splash-thread");
+        Thread showThread = new Thread(new AttractionRunner(magicShow, park, 2), "show-thread");
+
+        coasterThread.start();
+        splashThread.start();
+        showThread.start();
+
+        try {
+            coasterThread.join();
+            splashThread.join();
+            showThread.join();
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            System.out.println("WARNING: interrupted while waiting for the attractions.");
+        }
+        System.out.println("Park-wide total after round 1: " + park.getParkWideTotal());
+
+        System.out.println("Round 2 - the same work handed to a pool of worker threads:");
+        coaster.addToQueue(v1);
+        coaster.addToQueue(v2);
+        splashFalls.addToQueue(v3);
+        splashFalls.addToQueue(v4);
+
+        ExecutorService pool = Executors.newFixedThreadPool(3);
+        pool.execute(new AttractionRunner(coaster, park, 1));
+        pool.execute(new AttractionRunner(splashFalls, park, 2));
+        pool.execute(new AttractionRunner(magicShow, park, 1));
+        pool.shutdown();
+
+        try {
+            pool.awaitTermination(10, TimeUnit.SECONDS);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            System.out.println("WARNING: interrupted while waiting for the thread pool.");
+        }
+
+        System.out.println("Final park-wide total of visitors served: " + park.getParkWideTotal());
+        park.printSeatsServed();
+        System.out.println("Distinct visitors admitted today: " + park.countDistinctVisitors());
 
     }
 

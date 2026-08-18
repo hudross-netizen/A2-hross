@@ -15,6 +15,26 @@ import java.util.Set;
 public class ThemePark {
     private String name;
     private Map<String, Attraction> attractions = new HashMap<String, Attraction>();
+    private int parkWideTotal = 0;
+
+    /**
+     * Adds to the single park-wide tally of visitors served.
+     * Synchronized because several attractions update this value at the
+     * same time: reading, adding and writing must happen as one step,
+     * or two threads can overwrite each other's update and the total
+     * comes out too low.
+     * @param served how many visitors an attraction just served
+     */
+    public synchronized void addServed(int served) {
+        parkWideTotal = parkWideTotal + served;
+    }
+
+    /**
+     * @return the park-wide total of visitors served
+     */
+    public int getParkWideTotal() {
+        return parkWideTotal;
+    }
 
     /**
      * Creates an empty park.
