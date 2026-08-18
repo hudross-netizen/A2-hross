@@ -227,6 +227,21 @@ public abstract class Attraction {
         System.out.println("Visit history for " + name + " sorted by ticket type, then name.");
     }
 
+    /**
+     * @return a copy of the visit history, so callers can read it
+     *         without being able to modify the attraction's own list
+     */
+    public ArrayList<Visitor> getVisitHistory() {
+        return new ArrayList<Visitor>(visitHistory);
+    }
+
+    /**
+     * @return a copy of the visitors currently waiting, in line order
+     */
+    public ArrayList<Visitor> getWaitingVisitors() {
+        return new ArrayList<Visitor>(waitingLine);
+    }
+
 
     /**
      * @return the attraction's shared details, including its kind

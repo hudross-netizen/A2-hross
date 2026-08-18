@@ -131,6 +131,36 @@ public class AssignmentTwo {
         System.out.println("Cycles at the end of the day - Thunder Loop: " + coaster.getCyclesRun()
                 + ", Dolphin Splash: " + dolphinShow.getCyclesRun());
 
+                // ===== Part 6: Managing the park =====
+        System.out.println();
+        System.out.println("--- Part 6: Managing the whole park ---");
+
+        ThemePark park = new ThemePark("Sunshine Adventure Park");
+        park.registerAttraction(coaster);
+        park.registerAttraction(dolphinShow);
+
+        Ride splashFalls = new Ride("R2", "Splash Falls", staff, 2, 100);
+        Show magicShow = new Show("S2", "Magic Hour", staff, 30, 40);
+        park.registerAttraction(splashFalls);
+        park.registerAttraction(magicShow);
+        park.registerAttraction(coaster);
+
+        System.out.println("Attractions registered: " + park.getAttractionCount());
+
+        Visitor v6 = new Visitor(206, "Fiona Ng", 29, "Season Pass");
+        splashFalls.addToQueue(v1);
+        splashFalls.addToQueue(v6);
+        splashFalls.runCycle();
+
+        System.out.println("Looking up attractions by ID:");
+        Attraction lookedUp = park.findAttraction("R2");
+        System.out.println("  " + lookedUp);
+        park.findAttraction("R9");
+
+        park.printSeatsServed();
+        System.out.println("Total seats served across the park: " + park.countTotalSeats());
+        System.out.println("Distinct visitors admitted today: " + park.countDistinctVisitors());
+
     }
 
 }
